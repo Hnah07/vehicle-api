@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { User } from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env";
+import { JWT_SECRET, NODE_ENV } from "../config/env";
 import validator from "validator";
+
 export const register = async (req: Request, res: Response) => {
   try {
     // 1. Name, email and password from the body
@@ -68,7 +69,7 @@ export const register = async (req: Request, res: Response) => {
       httpOnly: true,
       // in development moet false staan, in production true
       // anders is het NODE_ENV === "production" ? true : false;
-      secure: false,
+      secure: NODE_ENV === "production" ? true : false,
       sameSite: "lax",
     });
     const userObject = {
